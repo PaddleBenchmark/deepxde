@@ -1,7 +1,13 @@
 """Backend supported: tensorflow.compat.v1, tensorflow, pytorch, paddle"""
 import deepxde as dde
 import numpy as np
+import time
 
+from deepxde.config import set_random_seed
+from paddle.fluid import core
+
+set_random_seed(100)
+core.set_prim_eager_enabled(True)
 
 def ddy(x, y):
     return dde.grad.hessian(y, x)
@@ -52,6 +58,9 @@ net = dde.nn.FNN(layer_size, activation, initializer)
 
 model = dde.Model(data, net)
 model.compile("adam", lr=0.001, metrics=["l2 relative error"])
+begin = time.time()
 losshistory, train_state = model.train(iterations=10000)
+end = time.time()
 
+print("ips: ", 1/(end - begin))
 dde.saveplot(losshistory, train_state, issave=True, isplot=True)

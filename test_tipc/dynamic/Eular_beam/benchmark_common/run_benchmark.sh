@@ -48,7 +48,7 @@ function _train(){
 
 #   以下为通用执行命令，无特殊可不用修改
 
-    export DDE_BACKEND=paddle
+    export DDE_BACKEND=pytorch
     train_cmd="python3.7 examples/pinn_forward/Euler_beam.py" 
 
     echo "train_cmd: ${train_cmd}  log_file: ${train_log_file}"

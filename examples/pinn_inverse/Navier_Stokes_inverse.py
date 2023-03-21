@@ -134,7 +134,7 @@ loss_history, train_state = model.train(
 )
 end = time.time()
 
-print("ips: ", 1/(end - begin))
+print("ips: ", （1000 * 10000）/(end - begin))
 dde.saveplot(loss_history, train_state, issave=True, isplot=True)
 # model.compile("adam", lr=1e-4, external_trainable_variables=[C1, C2])
 # loss_history, train_state = model.train(

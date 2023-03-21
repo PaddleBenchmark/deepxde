@@ -10,6 +10,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
 import re
+import time
+
+from deepxde.config import set_random_seed
+from paddle.fluid import core
+
+set_random_seed(100)
+core.set_prim_eager_enabled(True)
 
 # true values
 C1true = 1.0
@@ -17,7 +24,7 @@ C2true = 0.01
 
 # Load training data
 def load_training_data(num):
-    data = loadmat("../dataset/cylinder_nektar_wake.mat")
+    data = loadmat("examples/dataset/cylinder_nektar_wake.mat")
     U_star = data["U_star"]  # N x 2 x T
     P_star = data["p_star"]  # N x T
     t_star = data["t"]  # T x 1
@@ -121,14 +128,18 @@ variable = dde.callbacks.VariableValue([C1, C2], period=100, filename=fnamevar)
 
 # Compile, train and save model
 model.compile("adam", lr=1e-3, external_trainable_variables=[C1, C2])
+begin = time.time()
 loss_history, train_state = model.train(
     iterations=10000, callbacks=[variable], display_every=1000, disregard_previous_best=True
 )
+end = time.time()
+
+print("ips: ", (1000 * 10000)/(end - begin))
 dde.saveplot(loss_history, train_state, issave=True, isplot=True)
-model.compile("adam", lr=1e-4, external_trainable_variables=[C1, C2])
-loss_history, train_state = model.train(
-    epochs=10000, callbacks=[variable], display_every=1000, disregard_previous_best=True
-)
+# model.compile("adam", lr=1e-4, external_trainable_variables=[C1, C2])
+# loss_history, train_state = model.train(
+#     epochs=10000, callbacks=[variable], display_every=1000, disregard_previous_best=True
+# )
 dde.saveplot(loss_history, train_state, issave=True, isplot=True)
 # model.save(save_path = "./NS_inverse_model/model")
 f = model.predict(ob_xyt, operator=Navier_Stokes_Equation)

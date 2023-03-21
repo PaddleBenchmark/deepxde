@@ -62,5 +62,5 @@ begin = time.time()
 losshistory, train_state = model.train(iterations=10000)
 end = time.time()
 
-print("ips: ", 1/(end - begin))
+print("ips: ", (12 * 10000)/(end - begin))
 dde.saveplot(losshistory, train_state, issave=True, isplot=True)

@@ -1,2 +1,2 @@
 pip3.7 install -r requirements.txt
-export PYTHONPATH=${ROOT_DIR}/deepxde
+pip3.7 install -e ${ROOT_DIR}/deepxde

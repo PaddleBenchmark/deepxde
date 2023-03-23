@@ -4,10 +4,8 @@ import numpy as np
 import time
 
 from deepxde.config import set_random_seed
-from paddle.fluid import core
 
 set_random_seed(100)
-core.set_prim_eager_enabled(True)
 
 def ddy(x, y):
     return dde.grad.hessian(y, x)

@@ -1,2 +1,2 @@
-pip3.7 install -r requirements.txt
-pip3.7 install -e .
+pip install -r requirements.txt
+pip install -e .

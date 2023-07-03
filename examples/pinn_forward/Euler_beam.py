@@ -44,8 +44,8 @@ data = dde.data.PDE(
     geom,
     pde,
     [bc1, bc2, bc3, bc4],
-    num_domain=10,
-    num_boundary=2,
+    num_domain=100,
+    num_boundary=4,
     solution=func,
     num_test=100,
 )

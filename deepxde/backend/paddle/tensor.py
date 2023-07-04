@@ -62,7 +62,7 @@ def Variable(initial_value, dtype=None):
     return paddle.create_parameter(
         shape=[1],
         dtype=paddle.get_default_dtype() if dtype is None else dtype,
-        default_initializer=paddle.nn.initializer.Constant(value=initial_value)
+        default_initializer=paddle.nn.initializer.Constant(value=initial_value),
     )
 
 
@@ -75,7 +75,9 @@ def as_tensor(data, dtype=None):
 
 
 def sparse_tensor(indices, values, shape):
-    return paddle.sparse.sparse_coo_tensor(list(zip(*indices)), values, shape, stop_gradient=False)
+    return paddle.sparse.sparse_coo_tensor(
+        list(zip(*indices)), values, shape, stop_gradient=False
+    )
 
 
 def from_numpy(np_array):
@@ -171,6 +173,8 @@ def reduce_sum(input_tensor):
 
 
 def norm(x, ord=None, axis=None, keepdims=False):
+    if ord is None:
+        ord = 2
     return paddle.linalg.norm(x, p=ord, axis=axis, keepdim=keepdims)
 
 

@@ -13,8 +13,15 @@ import re
 import time
 
 from deepxde.config import set_random_seed
+<<<<<<< HEAD
 
 set_random_seed(100)
+=======
+from paddle.fluid import core
+
+set_random_seed(100)
+core.set_prim_eager_enabled(True)
+>>>>>>> 0947e2e285c6f607db418aad5b9c3cac99b53457
 
 # true values
 C1true = 1.0

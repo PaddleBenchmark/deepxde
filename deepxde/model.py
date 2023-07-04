@@ -663,6 +663,7 @@ class Model:
 
             if self.stop_training:
                 break
+            
         skip_step_1 = 2
         skip_step_2 = max(int(len(ips_list)*0.05), 5)
         del ips_list[:skip_step_1]

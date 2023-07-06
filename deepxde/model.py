@@ -15,6 +15,7 @@ from . import utils
 from .backend import backend_name, tf, torch, jax, paddle
 from .callbacks import CallbackList
 from .utils import list_to_str
+import time
 
 
 class Model:
@@ -641,7 +642,10 @@ class Model:
         return self.losshistory, self.train_state
 
     def _train_sgd(self, iterations, display_every):
+        num_warmup = 0
+        batch_cost_list, ips_list = [], []
         for i in range(iterations):
+            tic_start = time.perf_counter()
             self.callbacks.on_epoch_begin()
             self.callbacks.on_batch_begin()
 
@@ -653,6 +657,11 @@ class Model:
                 self.train_state.y_train,
                 self.train_state.train_aux_vars,
             )
+            batch_cost = time.perf_counter() - tic_start
+            if i >= num_warmup:
+                batch_cost_list.append(batch_cost)
+                batch_cost_avg = sum(batch_cost_list) / (i + 1)
+                ips_list.append(self.train_state.X_train.shape[0] / batch_cost_avg)
 
             self.train_state.epoch += 1
             self.train_state.step += 1
@@ -664,7 +673,13 @@ class Model:
 
             if self.stop_training:
                 break
-
+            
+        skip_step_1 = 2
+        skip_step_2 = max(int(len(ips_list)*0.05), 5)
+        del ips_list[:skip_step_1]
+        del ips_list[:skip_step_2]
+        del ips_list[-skip_step_2:]
+        print(f"average ips: {sum(ips_list) / (iterations - skip_step_1 - skip_step_2)} samples/second")
     def _train_tensorflow_compat_v1_scipy(self, display_every):
         def loss_callback(loss_train, loss_test, *args):
             self.train_state.epoch += 1

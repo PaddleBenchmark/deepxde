@@ -4,10 +4,8 @@ import numpy as np
 import time
 
 from deepxde.config import set_random_seed
-from paddle.fluid import core
 
 set_random_seed(100)
-core.set_prim_eager_enabled(True)
 
 def ddy(x, y):
     return dde.grad.hessian(y, x)
@@ -46,8 +44,8 @@ data = dde.data.PDE(
     geom,
     pde,
     [bc1, bc2, bc3, bc4],
-    num_domain=10,
-    num_boundary=2,
+    num_domain=100,
+    num_boundary=4,
     solution=func,
     num_test=100,
 )
